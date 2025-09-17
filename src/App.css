@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #a3c9ff 0%, #ffffff 100%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* card closer to top */
+  min-height: 100vh;
+  padding-top: 50px;
+}
+
+.app-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.container {
+  width: 80vw;          /* responsive width */
+  max-width: 1000px;    /* max size on big screens */
+  min-width: 300px;     /* min size on tiny screens */
+  height: auto;         /* let height adjust based on content */
+  min-height: 200px;
+  padding: 5% 3%;       /* padding relative to container size */
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertically center content */
+}
+
+
+h1 {
+  margin-bottom: 25px;
+  color: #0d2f6b; /* dark blue heading */
+}
+
+/* Row layout for dropdown + button */
+.row-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.dropdown-wrapper {
+  flex: 1;
+}
+
+/* Button styling */
+.download-button {
+  padding: 12px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #1976d2; /* medium blue */
+  color: white;
+  border: 1px solid #1565c0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+.download-button:hover {
+  background-color: #1565c0;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .row-wrapper {
+    flex-direction: column-reverse; /* stack button above dropdown */
+    align-items: stretch;
+    gap: 12px; /* space between button and dropdown */
+  }
+
+  .dropdown-wrapper {
+    margin-top: 0; /* no extra top margin needed */
+  }
+
+  .download-button {
+    width: 100%;
+  }
+}
+
