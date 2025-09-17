@@ -1,43 +1,71 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import Select from "react-select";
 import "./App.css";
 
 function App() {
   const vulnerabilities = [
-    "Injection",
-    "Broken Authentication",
-    "Sensitive Data Exposure",
-    "XML External Entities (XXE)",
+    "Cryptographic Failures",
     "Broken Access Control",
+    "Injection",
+    "Insecure Design",
     "Security Misconfiguration",
-    "Cross-Site Scripting (XSS)",
-    "Insecure Deserialization",
-    "Using Components with Known Vulnerabilities",
-    "Insufficient Logging & Monitoring",
+    "Vulnerable and Outdated Components",
+    "Identification and Authentication Failures",
+    "Software and Data Integrity Failures",
+    "Security Logging and Monitoring Failures",
+    "Server-Side Request Forgery (SSRF)"
   ];
+
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const options = vulnerabilities
     .sort()
     .map((item) => ({ value: item, label: item }));
 
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [isDownloading, setIsDownloading] = useState(false); // ✅ Loading state
 
-  const handleDownloadClick = () => {
-  if (selectedOptions.length === 0) {
-    alert("Please select an option");
-    return;
-  }
+  const handleDownloadClick = async () => {
+    if (selectedOptions.length === 0) {
+      alert("Please select an option");
+      return;
+    }
 
-  const payload = {
-    vulnerabilities: selectedOptions.map(opt => opt.label),
-    format: "pdf"
+    const payload = {
+      vulnerabilities: selectedOptions.map(opt => opt.label),
+    };
+
+    try {
+      setIsDownloading(true); // ✅ Start loading
+
+      const response = await fetch(`${BACKEND_URL}/generate-report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("Failed to generate report");
+
+      const data = await response.json();
+      if (data.status !== "success") throw new Error(data.message || "Report generation failed");
+
+      const fileUrl = `${BACKEND_URL}${data.file_url}`;
+
+      // ✅ Trigger download
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.download = fileUrl.split("/").pop();
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    } catch (err) {
+      console.error(err);
+      alert("Error generating or downloading report: " + err.message);
+    } finally {
+      setIsDownloading(false); // ✅ Stop loading
+    }
   };
-
-  // Simulate sending POST request to abc.com
-  console.log("POST request to https://abc.com/generate-report", payload);
-
-};
-
 
   return (
     <div className="app-wrapper">
@@ -90,8 +118,16 @@ function App() {
             />
           </div>
 
-          <button className="download-button" onClick={handleDownloadClick}>
-            Download
+          <button
+            className="download-button"
+            onClick={handleDownloadClick}
+            disabled={isDownloading} // ✅ Disable while downloading
+          >
+            {isDownloading ? (
+              <span className="spinner"></span> // ✅ Show spinner animation
+            ) : (
+              "Download"
+            )}
           </button>
         </div>
       </div>
