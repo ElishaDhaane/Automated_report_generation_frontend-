@@ -16,7 +16,7 @@ function App() {
     "Server-Side Request Forgery (SSRF)"
   ];
 
-  const BACKEND_URL = "https://automated-report-generation-backend.onrender.com";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const options = vulnerabilities
     .sort()
